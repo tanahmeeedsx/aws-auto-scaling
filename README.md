@@ -1,77 +1,102 @@
-# AWS Auto Scaling & Load Balancing Infrastructure
+# AWS Auto Scaling & Load Balancing
 
-A hands-on AWS project that demonstrates how to build a scalable and reliable infrastructure for applications with changing traffic.
+A hands-on AWS project demonstrating how to build a scalable and reliable infrastructure that automatically responds to changing application traffic.
 
-The infrastructure uses an Application Load Balancer to distribute traffic across healthy EC2 instances, while an Auto Scaling Group automatically adjusts the number of instances based on CPU utilization.
+Imagine an application suddenly getting more users. The infrastructure needs to distribute traffic across healthy servers and automatically add or remove instances based on workload.
 
-## Real-World Scenario
-
-Imagine an application suddenly gets more users and traffic starts increasing.
-
-Running everything on a single EC2 instance can create a bottleneck and affect application availability. A better approach is to distribute traffic across multiple healthy instances and automatically add or remove instances based on workload.
-
-This project demonstrates that workflow using AWS.
+This project demonstrates that real-world DevOps scenario using AWS.
 
 ## Architecture
 
 ```text
-                    Internet Users
-                          |
-                          v
-              +-----------------------+
-              | Application Load      |
-              | Balancer (ALB)        |
-              +-----------+-----------+
-                          |
-                          v
-                 +----------------+
-                 |  Target Group  |
-                 +-------+--------+
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-        +-----------+         +-----------+
-        | EC2       |         | EC2       |
-        | Nginx     |         | Nginx     |
-        +-----------+         +-----------+
-              |                     |
-              +----------+----------+
-                         |
-                         v
-                Auto Scaling Group
-                         |
-                         v
-                CloudWatch Monitoring
-                         |
-                  CPU Utilization
-                         |
-                         v
-                 Scale Out / Scale In
+                    Users
+                      |
+                      v
+              ┌───────────────┐
+              │      ALB      │
+              │ Load Balancer │
+              └───────┬───────┘
+                      |
+                Target Group
+                  /       \
+                 v         v
+             EC2 + Nginx  EC2 + Nginx
+                  \       /
+                   \     /
+                Auto Scaling
+                     |
+                     v
+                 CloudWatch
+                     |
+              Scale Out / In
 ```
 
-## AWS Services Used
+## Tech Stack
 
-* Amazon EC2
-* Application Load Balancer (ALB)
-* Auto Scaling Group (ASG)
-* Launch Template
-* Target Group
-* Amazon CloudWatch
-* Security Groups
-* Nginx
+<p align="left">
+  <img src="https://skillicons.dev/icons?i=aws,linux,nginx" />
+</p>
 
-## How It Works
+**AWS Services**
 
-1. Users send requests to the Application Load Balancer.
-2. The ALB forwards traffic to healthy EC2 instances through the Target Group.
-3. Nginx serves the application from the EC2 instances.
-4. CloudWatch monitors CPU utilization.
-5. When CPU usage increases, the Auto Scaling policy launches a new EC2 instance.
-6. The new instance is automatically registered with the Target Group.
-7. The ALB distributes traffic across the healthy instances.
-8. When the workload decreases, Auto Scaling removes the extra instance.
+`EC2` `ALB` `Auto Scaling` `Target Groups` `CloudWatch` `Security Groups` `Launch Templates`
 
-## Auto Scaling Configuration
+## What I Built
 
-| Set
+* Application Load Balancer for traffic distribution
+* EC2 Auto Scaling Group with Target Tracking
+* Launch Template with Nginx
+* CloudWatch monitoring and scaling alarms
+* Health checks through Target Group
+* Automatic scale-out and scale-in testing
+
+## Scaling Flow
+
+```text
+CPU Increases
+     ↓
+CloudWatch Alarm
+     ↓
+Auto Scaling
+     ↓
+New EC2 Instance
+     ↓
+Target Group
+     ↓
+ALB distributes traffic
+```
+
+When the workload decreases, Auto Scaling automatically scales the infrastructure back down.
+
+## Testing
+
+I tested both:
+
+**Scale Out**
+
+`1 EC2 → 2 EC2`
+
+**Scale In**
+
+`2 EC2 → 1 EC2`
+
+I also troubleshot real setup issues including ALB access, EC2 SSH connectivity, Security Groups, and Target Group health.
+
+## Key Learnings
+
+* Load balancing
+* Auto scaling
+* CloudWatch monitoring
+* EC2 health checks
+* AWS networking and security
+* Infrastructure reliability
+
+## Project Demo
+
+The project was tested directly on AWS using the Console, including ALB, Target Groups, EC2, Auto Scaling and CloudWatch.
+
+## Author
+
+Tanjim Ahmed
+
+[GitHub](https://github.com/tanahmeeedsx)
